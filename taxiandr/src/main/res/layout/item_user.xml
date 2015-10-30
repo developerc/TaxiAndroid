@@ -16,6 +16,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <TextView
+            android:textColor="@drawable/white_color"
             android:id="@+id/tvAdres"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,17 +31,20 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
         <TextView
+            android:textColor="@drawable/sky_blue_color"
             android:id="@+id/tvSroch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="срочный" />
 
         <TextView
+            android:textColor="@drawable/sky_blue_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="  |  " />
 
         <TextView
+            android:textColor="@drawable/sky_blue_color"
             android:id="@+id/tvIndiv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
