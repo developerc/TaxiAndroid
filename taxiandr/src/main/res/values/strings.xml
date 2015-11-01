@@ -15,4 +15,9 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="where_to_go">Адрес куда ехать</string>
+    <string name="sms_button">Отправить СМС</string>
+    <string name="title_activity_activity_three">Таксометр</string>
+    <string name="btn_taxometr">Старт</string>
+    <string name="btn_taxometr_stop">Расчет закончен</string>
+
 </resources>

@@ -35,7 +35,7 @@ public class CustomOrdersAdapter extends ArrayAdapter<Orders> {
         tvSroch.setText((CharSequence) order.sroch);
         tvIndiv.setText((CharSequence) order.indiv);
        // convertView.setBackgroundColor(0xFF6495ED);
-        convertView.setBackgroundColor(0xDD2A71B0);
+       // convertView.setBackgroundColor(0xDD2A71B0);
         if (position == 2) {
             imageView.setImageResource(R.drawable.ic_action_star_10);
         }

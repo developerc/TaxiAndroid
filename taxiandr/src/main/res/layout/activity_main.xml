@@ -9,7 +9,7 @@
     <FrameLayout android:id="@+id/container" android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        android:foreground="#2A71B0" />
+        android:foreground="@drawable/gray_blue_color" />
     <ListView
         android:id="@+id/lvOrders"
         android:layout_width="match_parent"

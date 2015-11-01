@@ -22,5 +22,13 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@drawable/white_color"
         android:background="@drawable/dark_blue_color" />
+
+    <ListView
+        android:id="@+id/lvActTwo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="30dp"
+        >
+    </ListView>
 </LinearLayout>
 
