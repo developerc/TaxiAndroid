@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">TaxiAndr</string>
 
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
+    <string name="title_section1">Такси Андроид</string>
+    <string name="title_section2">- Авторизация</string>
+    <string name="title_section3">- Тарифы</string>
+    <string name="title_section4">- Заказы</string>
+    <string name="title_section5">- Таксометр</string>
+    <string name="title_section6">- Выход</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -19,5 +22,10 @@
     <string name="title_activity_activity_three">Таксометр</string>
     <string name="btn_taxometr">Старт</string>
     <string name="btn_taxometr_stop">Расчет закончен</string>
+    <string name="login">Логин:</string>
+    <string name="password">Пароль:</string>
+    <string name="save">Сохранить</string>
+    <string name="load">Загрузить</string>
+    <string name="title_activity_four">Авторизация</string>
 
 </resources>
