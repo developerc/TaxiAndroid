@@ -32,13 +32,31 @@ public class CustomOrdersAdapter extends ArrayAdapter<Orders> {
         ImageView imageView = (ImageView) convertView.findViewById(R.id.ivCar);
 
         tvAdres.setText((CharSequence) order.adres);
-        tvSroch.setText((CharSequence) order.sroch);
+        //tvSroch.setText((CharSequence) order.sroch);
         tvIndiv.setText((CharSequence) order.indiv);
        // convertView.setBackgroundColor(0xFF6495ED);
        // convertView.setBackgroundColor(0xDD2A71B0);
-        if (position == 2) {
+        /*if (position == 2) {
             imageView.setImageResource(R.drawable.ic_action_star_10);
+        }*/
+        if (MainActivity.ZakazEmpty == false) {
+            if (MainActivity.predvar.get(position).toString().equals("null")) {
+                tvSroch.setText("Срочный");
+            } else {
+                tvSroch.setText("Предварительный " + MainActivity.dat.get(position).toString() + " " + MainActivity.tim.toString().substring(12,17));
+            }
+
+            if (MainActivity.car.get(position).toString().contains("null")) {
+                tvIndiv.setText("Общий");
+            } else {
+                tvIndiv.setText("Индивидуальный");
+                imageView.setImageResource(R.drawable.ic_action_star_10);
+            }
+
+        } else {
+            tvSroch.setText((CharSequence) order.sroch);
         }
+
 
 
         return convertView;

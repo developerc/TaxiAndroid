@@ -37,6 +37,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity
    // HTTGATask httgatask;  //обьявили класс для метода GEt
     private static final String TAG = "myLogs";
     final String textSource = "http://pchelka.teleknot.ru/api/user1/x11unkde/orders";
-    boolean ZakazEmpty = true;
+    public  static boolean ZakazEmpty = true;
     SharedPreferences sPref;
     final String SAVED_TEXT_LGN = "saved_text_lgn";
     final String SAVED_TEXT_PSW = "saved_text_psw";
@@ -143,11 +144,11 @@ public class MainActivity extends AppCompatActivity
                 conn.setDoInput(true);
                 conn.connect();
                 int response = conn.getResponseCode();
-                Log.d(TAG, "The response is: " + response);
+               // Log.d(TAG, "The response is: " + response);
                 InputStream in = conn.getInputStream();
-                Log.d(TAG, "GetInputStream:  " + in);
+               // Log.d(TAG, "GetInputStream:  " + in);
 
-                Log.d(TAG, "*******************    String Builder     *****************************");
+               // Log.d(TAG, "*******************    String Builder     *****************************");
                 String line = null;
 
                 BufferedReader bufferReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -175,7 +176,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void result) {
             //получили JSON строку с сервера
-            Log.d(TAG, textResult);
+           // Log.d(TAG, textResult);
             //обрабатываем JSON строку
             try {
                 ZakazJson(textResult);
@@ -227,7 +228,8 @@ public class MainActivity extends AppCompatActivity
 
             }
             for(int i=0; i<zakaz.size(); i++) {
-                Log.d(TAG, "Заказ=" + zakaz.get(i) + "  Адрес:" + adres.get(i) + "  Предварительный:" + predvar.get(i));
+
+                Log.d(TAG, "Заказ=" + zakaz.get(i) + "  Адрес:" + adres.get(i) + "  Предварительный:" + predvar.get(i) + " Дата:" + dat.get(i) + " Время:" + tim.get(i).substring(11,16) + " Машина:" + car.get(i));
             }
 
         }
