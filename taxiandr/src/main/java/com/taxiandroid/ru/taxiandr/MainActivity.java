@@ -9,11 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,9 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -37,7 +32,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -49,6 +43,7 @@ public class MainActivity extends AppCompatActivity
     ListView lvOrders;
     CustomOrdersAdapter adapter;
     String httpPath;
+    String postPath;
     final Handler myHandler = new Handler();
    // Runnable runnable;
    // HTTGATask httgatask;  //обьявили класс для метода GEt
@@ -58,6 +53,7 @@ public class MainActivity extends AppCompatActivity
     SharedPreferences sPref;
     final String SAVED_TEXT_LGN = "saved_text_lgn";
     final String SAVED_TEXT_PSW = "saved_text_psw";
+    public static boolean flagClkLV = false;
 
     public static ArrayList<Integer> zakaz = new ArrayList<Integer>();
     public static ArrayList<String> telefon = new ArrayList<String>();
@@ -108,6 +104,7 @@ public class MainActivity extends AppCompatActivity
         MyVariables.SAVED_TEXT_2 = sPref.getString(SAVED_TEXT_PSW, "");
 
         httpPath =MyVariables.HTTPAdress+MyVariables.SAVED_TEXT_1+"/"+MyVariables.SAVED_TEXT_2+"/orders";
+        postPath = MyVariables.HTTPAdress+MyVariables.SAVED_TEXT_1+"/"+MyVariables.SAVED_TEXT_2+"/order/";
         Log.d(TAG, "Запустилось! " );
     }
 
@@ -118,13 +115,71 @@ public class MainActivity extends AppCompatActivity
 
     final Runnable myRunnable = new Runnable() {
         public void run() {
-           Log.d(TAG, "Таймер работает! " );
-            new GetAsincTask().execute(httpPath);
-            if (ZakazEmpty == false) {
-                updateUsersList();
+            Log.d(TAG, "Таймер работает! ");
+            if (flagClkLV == false) { //усли не кликнули на ListView
+                new GetAsincTask().execute(httpPath);
+                if (ZakazEmpty == false) {
+                    updateUsersList(); //обновляем ListView
+                } else {
+                    populateUsersList();
+                }
+            } else { //отсылаем POST на взятие заказа
+             new PostAsincTask().execute(postPath + "addcar");
             }
         }
     };
+
+    public  class PostAsincTask extends AsyncTask<String, Void, String> {
+        String response = "";
+        @Override
+        protected String doInBackground(String... params) {
+            Log.d(TAG, "*******************    Open Post Connection    *****************************");
+            Log.d(TAG, params[0]);
+            String url = params[0];
+            JSONObject jsonBody;
+            String requestBody;
+            HttpURLConnection urlConnection = null;
+
+            try {
+                jsonBody = new JSONObject();
+                jsonBody.put("order_id", "-2");
+                requestBody = jsonBody.toString();
+               // requestBody = Utils.buildPostParameters(jsonBody);
+                urlConnection = (HttpURLConnection) Utils.makeRequest("POST", url, null, "application/json", requestBody);
+                if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    String line;
+                    BufferedReader br=new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    while ((line=br.readLine()) != null) {
+                        response+=line;
+                    }
+                    Log.d(TAG, response);
+                   // ...
+                } else {
+
+                    Log.d(TAG, String.valueOf(urlConnection.getResponseCode()));
+                }
+                //...
+                return response;
+            } catch (JSONException | IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+            }
+
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            //получили JSON строку с сервера
+            // Log.d(TAG, textResult);
+            //обрабатываем JSON строку
+
+            flagClkLV = false;
+            super.onPostExecute(result);
+        }
+    }
 
     public class GetAsincTask extends AsyncTask<String, Void, Void> {
 
@@ -199,10 +254,13 @@ public class MainActivity extends AppCompatActivity
         else {
             Log.d(TAG, "Заказы есть");
             ZakazEmpty = false;
-            jsonString = "{\"myjsonarray\"="+jsonString+"}";
+           // jsonString = "{\"myjsonarray\"="+jsonString+"}";
             Log.d(TAG, jsonString);
-            JSONObject jo =  new JSONObject(jsonString);
-            JSONArray jsonMainArr = jo.getJSONArray("myjsonarray");
+           // JSONObject jo =  new JSONObject(jsonString);
+           // JSONArray jsonMainArr = null;
+            //jsonMainArr = jo.toJSONArray(jsonMainArr);
+            // JSONArray jsonMainArr = jo.getJSONArray("myjsonarray");
+            JSONArray jsonMainArr = new JSONArray(jsonString);
 
             //Очищаем ArrayList
             zakaz.clear();
@@ -288,8 +346,9 @@ public class MainActivity extends AppCompatActivity
             String itemZak = itemLV.adres;
             Toast.makeText(getApplicationContext(),
                     "Вы выбрали " + itemZak + " \n Для отказа нажмите на заказ", Toast.LENGTH_SHORT).show();
-            //
-            startActivity(new Intent(getApplicationContext(),ActivityTwo.class));
+            flagClkLV = true;
+            //потом откроем Activity2 если придет респонз об удачном взятии заказа
+           // startActivity(new Intent(getApplicationContext(),ActivityTwo.class));
         }
     };
 
