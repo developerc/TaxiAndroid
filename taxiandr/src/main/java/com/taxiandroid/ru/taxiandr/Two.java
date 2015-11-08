@@ -21,6 +21,7 @@ public class Two {
         two_items.add(new Two("СМС о прибытии"));
         two_items.add(new Two("Звонок абоненту"));
         two_items.add(new Two("Таксометр"));
+        two_items.add(new Two("Отказ"));
         return two_items;
     }
 }

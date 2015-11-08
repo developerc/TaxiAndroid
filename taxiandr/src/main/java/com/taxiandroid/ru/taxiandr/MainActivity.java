@@ -54,6 +54,10 @@ public class MainActivity extends AppCompatActivity
     final String SAVED_TEXT_LGN = "saved_text_lgn";
     final String SAVED_TEXT_PSW = "saved_text_psw";
     public static boolean flagClkLV = false;
+    static String errPost="";
+    public static int ClkZak;
+    public static String ClkAdr="";
+    public static String ClkTel="";
 
     public static ArrayList<Integer> zakaz = new ArrayList<Integer>();
     public static ArrayList<String> telefon = new ArrayList<String>();
@@ -124,12 +128,15 @@ public class MainActivity extends AppCompatActivity
                     populateUsersList();
                 }
             } else { //отсылаем POST на взятие заказа
+
+
              new PostAsincTask().execute(postPath + "addcar");
+               // Log.d(TAG, errPost);
             }
         }
     };
 
-    public  class PostAsincTask extends AsyncTask<String, Void, String> {
+        public  class PostAsincTask extends AsyncTask<String, Void, String> {
         String response = "";
         @Override
         protected String doInBackground(String... params) {
@@ -142,7 +149,7 @@ public class MainActivity extends AppCompatActivity
 
             try {
                 jsonBody = new JSONObject();
-                jsonBody.put("order_id", "-2");
+                jsonBody.put("order_id", ClkZak);
                 requestBody = jsonBody.toString();
                // requestBody = Utils.buildPostParameters(jsonBody);
                 urlConnection = (HttpURLConnection) Utils.makeRequest("POST", url, null, "application/json", requestBody);
@@ -153,13 +160,25 @@ public class MainActivity extends AppCompatActivity
                         response+=line;
                     }
                     Log.d(TAG, response);
-                   // ...
-                } else {
+                    try {
+                        JSONObject jo =  new JSONObject(response);
+                        errPost= jo.getString("error");
+                        /*if (errPost.contains("none")) {
+                            Toast.makeText(getApplicationContext(), "Сервер ответил ОК", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Сервер ответил Ошибка", Toast.LENGTH_SHORT).show();
+                        }*/
 
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                   // Log.d(TAG, String.valueOf(errPost));
+                } else {
+                   // Toast.makeText(getApplicationContext(), "Ошибка ответа сервера", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, String.valueOf(urlConnection.getResponseCode()));
                 }
                 //...
-                return response;
+               // return response;
             } catch (JSONException | IOException e) {
                 e.printStackTrace();
             } finally {
@@ -168,7 +187,8 @@ public class MainActivity extends AppCompatActivity
                 }
             }
 
-            return null;
+            return response;
+           // return null;
         }
         @Override
         protected void onPostExecute(String result) {
@@ -178,6 +198,13 @@ public class MainActivity extends AppCompatActivity
 
             flagClkLV = false;
             super.onPostExecute(result);
+            if (errPost.contains("none")) {
+                //Toast.makeText(getApplicationContext(), "Сервер ответил ОК", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getApplicationContext(), ActivityTwo.class));
+            } else {
+                Toast.makeText(getApplicationContext(), "Сервер ответил Ошибка", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 
@@ -342,11 +369,15 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             view.setSelected(true);
-            Orders itemLV = (Orders) parent.getItemAtPosition(position);
-            String itemZak = itemLV.adres;
+           // Orders itemLV = (Orders) parent.getItemAtPosition(position);
+            //String itemZak = itemLV.adres;
+            ClkZak = zakaz.get(position);
+            ClkAdr = adres.get(position);
+            ClkTel = telefon.get(position);
             Toast.makeText(getApplicationContext(),
-                    "Вы выбрали " + itemZak + " \n Для отказа нажмите на заказ", Toast.LENGTH_SHORT).show();
-            flagClkLV = true;
+                    "Вы выбрали " + ClkAdr + " \n заказ " + ClkZak, Toast.LENGTH_SHORT).show();
+            if (flagClkLV == false)  {flagClkLV = true;}
+            else  flagClkLV = false;
             //потом откроем Activity2 если придет респонз об удачном взятии заказа
            // startActivity(new Intent(getApplicationContext(),ActivityTwo.class));
         }

@@ -34,6 +34,9 @@ public class CustomTwoAdapter extends ArrayAdapter<Two> {
         if (position == 1) {
             imageView.setImageResource(R.drawable.ic_action_phone_outgoing);
         }
+        if (position == 3) {
+            imageView.setImageResource(R.drawable.ic_action_undo);
+        }
 
         return convertView;
     }
